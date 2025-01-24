@@ -28,8 +28,8 @@ env:
   CONFIG_FILE: ARMv8/lede-gcc11.config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
-  UPLOAD_BIN_DIR: false
-  UPLOAD_FIRMWARE: false
+  UPLOAD_BIN_DIR: true
+  UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
   FILE_NAME: ARMv8_ROOTFS
@@ -179,6 +179,7 @@ jobs:
         cd openwrt
         echo -e "$(nproc) thread compile"
         make -j$(($(nproc)+1)) V=s &> build.log
+        ls
         echo "status=success" >> ${GITHUB_OUTPUT}
         grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
         [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
@@ -188,6 +189,7 @@ jobs:
       if: steps.compile.outputs.status == 'success' && !cancelled()
       run: |
         cd openwrt/
+        mv build.log ../build.log
         rm -rf $(ls . | grep -v "^bin$" | xargs) 2>/dev/null
         df -hT ${PWD}
 
@@ -202,7 +204,7 @@ jobs:
       uses: actions/upload-artifact@main
       with:
         name: OpenWrt_log${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-        path: openwrt/build.log
+        path: build.log
 
     - name: Organize files
       id: organize
