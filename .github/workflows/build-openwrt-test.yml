@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: Build OpenWrt
+name: Build OpenWrt lede
 
 on:
   repository_dispatch:
@@ -121,10 +121,6 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /builder/openwrt $GITHUB_WORKSPACE/openwrt
         cd openwrt
-        git clone https://github.com/coolsnowwolf/lede -b master
-        # rm -rf ./tollchain
-        # mv lede/toolchain tollchain
-        # rm -rf lede
         useVersionInfo=$(git show -s --date=short --format="Author: %an<br/>date: %cd<br/>commit: %s<br/>commit hash: %H")
         echo "useVersionInfo=$useVersionInfo" >> $GITHUB_ENV
         echo "DATE=$(date "+%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
@@ -204,7 +200,6 @@ jobs:
 
     - name: Upload build log
       uses: actions/upload-artifact@main
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_BUILD_LOG == 'true'
       with:
         name: OpenWrt_log${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/build.log
