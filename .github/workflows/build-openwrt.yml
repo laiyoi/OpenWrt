@@ -124,6 +124,7 @@ jobs:
         git clone https://github.com/coolsnowwolf/lede -b master
         rm -rf ./toolchain
         mv lede/toolchain toolchain
+        mv lede/package/lean/ package/lean
         rm -rf lede
         useVersionInfo=$(git show -s --date=short --format="Author: %an<br/>date: %cd<br/>commit: %s<br/>commit hash: %H")
         echo "useVersionInfo=$useVersionInfo" >> $GITHUB_ENV
