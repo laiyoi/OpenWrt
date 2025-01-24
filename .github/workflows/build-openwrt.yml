@@ -122,8 +122,8 @@ jobs:
         ln -sf /builder/openwrt $GITHUB_WORKSPACE/openwrt
         cd openwrt
         git clone https://github.com/coolsnowwolf/lede -b master
-        rm -rf ./tollchain
-        mv lede/toolchain tollchain
+        rm -rf ./toolchain
+        mv lede/toolchain toolchain
         rm -rf lede
         useVersionInfo=$(git show -s --date=short --format="Author: %an<br/>date: %cd<br/>commit: %s<br/>commit hash: %H")
         echo "useVersionInfo=$useVersionInfo" >> $GITHUB_ENV
